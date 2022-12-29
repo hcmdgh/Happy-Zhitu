@@ -1,0 +1,3 @@
+[submodule "jojo_es"]
+	path = jojo_es
+	url = git@github.com:hcmdgh/JOJO-Elasticsearch.git
