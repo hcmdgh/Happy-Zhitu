@@ -1,3 +1,9 @@
 [submodule "jojo_es"]
 	path = jojo_es
 	url = git@github.com:hcmdgh/JOJO-Elasticsearch.git
+[submodule "jojo_janusgraph"]
+	path = jojo_janusgraph
+	url = git@github.com:hcmdgh/JOJO-JanusGraph.git
+[submodule "jojo_mysql"]
+	path = jojo_mysql
+	url = git@github.com:hcmdgh/JOJO-MySQL.git
