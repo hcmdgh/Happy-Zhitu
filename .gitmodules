@@ -10,3 +10,6 @@
 [submodule "Zhitu-Backend"]
 	path = Zhitu-Backend
 	url = git@github.com:hcmdgh/Zhitu-Backend.git
+[submodule "Zhitu-Calculation"]
+	path = Zhitu-Calculation
+	url = git@github.com:hcmdgh/Zhitu-Calculation.git
