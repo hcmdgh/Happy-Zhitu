@@ -1,4 +1,5 @@
 from .client import * 
+from .scholar import * 
 import core 
 
 from datetime import datetime
@@ -7,6 +8,22 @@ from typing import Any, Optional
 __all__ = [
     'sync_paper', 
 ]
+
+
+def link_paper_and_field(zhitu_paper_id: int,
+                         field_name_set: set[str]):
+    field_id_set: set[int] = set() 
+        
+    for field_name in field_name_set: 
+        field_id_set.update(
+            core.query_field_id_by_name(field_name)
+        )
+        
+    for field_id in field_id_set: 
+        core.link_paper_and_field(
+            paper_id = zhitu_paper_id, 
+            field_id = field_id, 
+        )
 
 
 def sync_paper(google_paper_id: str) -> dict[str, Any]:
@@ -59,18 +76,18 @@ def sync_paper(google_paper_id: str) -> dict[str, Any]:
         if paper_entry.get('second_class_tags'): 
             field_name_set.update(paper_entry['second_class_tags']) 
             
-        field_id_set: set[int] = set() 
-        
-        for field_name in field_name_set: 
-            field_id_set.update(
-                core.query_field_id_by_name(field_name)
-            )
+        link_paper_and_field(
+            zhitu_paper_id = zhitu_paper_id, 
+            field_name_set = field_name_set, 
+        )
             
-        for field_id in field_id_set: 
-            core.link_paper_and_field(
-                paper_id = zhitu_paper_id, 
-                field_id = field_id, 
-            )
+    google_scholar_id_list = paper_entry.get('author_id')
+    if not google_scholar_id_list:
+        google_scholar_id_list = [] 
+
+    for google_scholar_id in google_scholar_id_list:
+        if google_scholar_id:
+            sync_scholar(google_scholar_id=google_scholar_id) 
             
     return dict(
         error = paper_result.get('error'), 

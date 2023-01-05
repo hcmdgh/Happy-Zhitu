@@ -1,6 +1,7 @@
 from .client import * 
 import core
 
+import requests 
 from typing import Optional, Any 
 
 __all__ = [
@@ -34,6 +35,17 @@ def sync_scholar(google_scholar_id: str) -> dict[str, Any]:
     ) 
 
     result = core.create_scholar(converted_scholar_entry)
+    
+    if result.get('scholar_id'): 
+        zhitu_scholar_id = int(result['scholar_id'])
+        
+        requests.get(
+            url = f"http://192.168.0.88:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
+        )
+        
+        requests.get(
+            url = f"http://192.168.0.88:9004/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
+        )
 
     return dict(
         error = result.get('error'), 
