@@ -21,9 +21,7 @@ Firstly, create a directory and some links:
 ```bash
 #!/bin/bash
 
-set -eux 
-
-mkdir ~/python_package 
+mkdir -p ~/python_package 
 ln -s <Repository-Directory>/JOJO-Elasticsearch/jojo_es ~/python_package 
 ln -s <Repository-Directory>/JOJO-JanusGraph/jojo_janusgraph ~/python_package 
 ln -s <Repository-Directory>/JOJO-MySQL/jojo_mysql ~/python_package 

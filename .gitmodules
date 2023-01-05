@@ -13,3 +13,6 @@
 [submodule "Zhitu-Calculation"]
 	path = Zhitu-Calculation
 	url = git@github.com:hcmdgh/Zhitu-Calculation.git
+[submodule "JOJO-MongoDB"]
+	path = JOJO-MongoDB
+	url = git@github.com:hcmdgh/JOJO-MongoDB.git
