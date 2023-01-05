@@ -1,5 +1,5 @@
 from .client import * 
-import zhitu 
+import core 
 
 from datetime import datetime
 from typing import Any, Optional 
@@ -46,7 +46,7 @@ def sync_paper(google_paper_id: str) -> dict[str, Any]:
     except Exception:
         paper_entry['year'] = None 
 
-    paper_result = zhitu.create_paper(paper_entry)
+    paper_result = core.create_paper(paper_entry)
     
     zhitu_paper_id = paper_result.get('paper_id')
 
@@ -63,11 +63,11 @@ def sync_paper(google_paper_id: str) -> dict[str, Any]:
         
         for field_name in field_name_set: 
             field_id_set.update(
-                zhitu.query_field_id_by_name(field_name)
+                core.query_field_id_by_name(field_name)
             )
             
         for field_id in field_id_set: 
-            zhitu.link_paper_and_field(
+            core.link_paper_and_field(
                 paper_id = zhitu_paper_id, 
                 field_id = field_id, 
             )

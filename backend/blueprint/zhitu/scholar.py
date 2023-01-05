@@ -1,4 +1,4 @@
-import zhitu 
+import core
 
 from flask import Blueprint, request 
 import time 
@@ -14,7 +14,7 @@ def query_scholar_paper() -> dict[str, Any]:
     scholar_id = int(request.json['scholar_id']) 
     source = request.json['source'].strip() 
     
-    paper_list = zhitu.query_scholar_paper(
+    paper_list = core.query_scholar_paper(
         scholar_id = scholar_id, 
         source = source, 
     )

@@ -8,6 +8,9 @@ __all__ = [
 
 
 def delete_scholar(scholar_id: int) -> dict[str, Any]:
+    janusgraph_client = get_janusgraph_client()
+    mysql_client = get_mysql_client()
+    
     table = mysql_client.get_table('dump', 'scholar_basic')
     table.delete_by_id(scholar_id)
     

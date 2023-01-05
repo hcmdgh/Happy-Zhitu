@@ -11,6 +11,8 @@ __all__ = [
 
 def merge_scholar(src_id: int,
                   target_id: int) -> dict[str, Any]:
+    janusgraph_client = get_janusgraph_client()
+    
     if not janusgraph_client.is_vertex_exist(src_id) or not janusgraph_client.is_vertex_exist(target_id):
         return dict(
             error = dict(

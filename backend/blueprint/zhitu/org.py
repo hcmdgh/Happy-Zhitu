@@ -1,4 +1,4 @@
-import zhitu 
+import core 
 
 from flask import Blueprint, request 
 import time 
@@ -13,7 +13,7 @@ def query_org_id_by_name() -> dict[str, Any]:
     
     org_name = request.json['org_name'].strip() 
     
-    org_id_set = zhitu.query_org_id_by_name(org_name)
+    org_id_set = core.query_org_id_by_name(org_name)
     
     return dict(
         error = None, 
@@ -28,7 +28,7 @@ def create_org() -> dict[str, Any]:
     
     org_name = request.json['org_name'].strip() 
     
-    result = zhitu.create_org(org_name=org_name)
+    result = core.create_org(org_name=org_name)
     
     return dict(
         error = result.get('error'), 

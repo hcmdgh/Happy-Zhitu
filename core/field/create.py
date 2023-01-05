@@ -12,6 +12,8 @@ __all__ = [
 def create_field(field_name: str, 
                  field_level: int,
                  check_exist: bool = True) -> dict[str, Any]:
+    janusgraph_client = get_janusgraph_client()
+    
     field_name = field_name.strip() 
                  
     if check_exist:

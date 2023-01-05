@@ -7,6 +7,8 @@ __all__ = [
 
 
 def query_org_id_by_name(org_name: str) -> set[int]:
+    janusgraph_client = get_janusgraph_client()
+    
     org_name = org_name.strip() 
     
     org_id_set = janusgraph_client.query_vertex_by_prop(

@@ -35,6 +35,8 @@ def add_scholar_title(scholar_id: int,
 
 def update_scholar_title(scholar_id: int,
                          title: Optional[str]) -> dict[str, Any]:
+    mysql_client = get_mysql_client()
+    
     table = mysql_client.get_table('dump', 'scholar_basic')
     
     if not table.query_by_id(scholar_id):

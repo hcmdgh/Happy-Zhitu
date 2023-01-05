@@ -13,6 +13,8 @@ __all__ = [
 
 def query_scholar_by_name_org(scholar_name: str,
                               scholar_org: str) -> list[dict[str, Any]]:
+    mysql_client = get_mysql_client()
+    
     table = mysql_client.get_table('dump', 'scholar_basic')
     
     entry_list = table.query_X_eq_x_and_Y_eq_y(
@@ -31,6 +33,8 @@ def smart_query_scholar_by_name_org(scholar_name: str,
 
 
 def query_scholar_by_id(scholar_id: int) -> Optional[dict[str, Any]]:
+    mysql_client = get_mysql_client()
+    
     table = mysql_client.get_table('dump', 'scholar_basic')
     
     entry = table.query_by_id(id=scholar_id)
@@ -40,6 +44,9 @@ def query_scholar_by_id(scholar_id: int) -> Optional[dict[str, Any]]:
 
 def query_scholar_paper(scholar_id: int,
                         source: str = 'ES') -> list[dict[str, Any]]:
+    janusgraph_client = get_janusgraph_client()
+    es_client = get_es_client()
+    
     if source == 'ES':
         index = es_client.get_index('paper_v10', 'paper_v10')
 

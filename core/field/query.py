@@ -7,6 +7,8 @@ __all__ = [
 
 
 def query_field_id_by_name(field_name: str) -> set[int]:
+    janusgraph_client = get_janusgraph_client()
+    
     field_name = field_name.strip() 
     
     field_id_set: set[int] = set() 

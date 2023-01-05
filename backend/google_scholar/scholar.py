@@ -1,5 +1,5 @@
 from .client import * 
-import zhitu 
+import core
 
 from typing import Optional, Any 
 
@@ -33,7 +33,7 @@ def sync_scholar(google_scholar_id: str) -> dict[str, Any]:
         phone = scholar_entry.get('tel'),
     ) 
 
-    result = zhitu.create_scholar(converted_scholar_entry)
+    result = core.create_scholar(converted_scholar_entry)
 
     return dict(
         error = result.get('error'), 

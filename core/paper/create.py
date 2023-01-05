@@ -10,6 +10,8 @@ __all__ = [
 
 
 def create_paper(paper_entry: dict[str, Any]) -> dict[str, Any]:
+    janusgraph_client = get_janusgraph_client()
+    
     paper_title = paper_entry.get('paper_title') 
     
     if not paper_title:

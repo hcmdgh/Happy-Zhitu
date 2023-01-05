@@ -11,6 +11,9 @@ __all__ = [
 
 def query_paper_id_by_title(title: str,
                             source: str = 'JanusGraph') -> set[int]:
+    janusgraph_client = get_janusgraph_client()
+    es_client = get_es_client()
+
     title = title.strip() 
     
     if source == 'JanusGraph': 
@@ -40,6 +43,9 @@ def query_paper_id_by_title(title: str,
 
 def query_paper_by_title(title: str,
                          source: str = 'ES') -> list[dict[str, Any]]:
+    janusgraph_client = get_janusgraph_client()
+    es_client = get_es_client()
+    
     title = title.strip() 
                          
     if source == 'ES':

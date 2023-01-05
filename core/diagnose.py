@@ -1,5 +1,6 @@
 from .client import * 
 from .paper import * 
+from .scholar import * 
 
 import io 
 import traceback
@@ -12,6 +13,8 @@ __all__ = [
 
 
 def diagnose_all() -> dict[str, Any]:
+    mysql_client = get_mysql_client()
+    
     try:
         SCHOLAR_ID = 14372606192
         

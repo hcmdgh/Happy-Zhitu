@@ -1,4 +1,5 @@
 import google_scholar
+import core 
 
 from flask import Blueprint, request 
 import time 

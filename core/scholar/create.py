@@ -43,6 +43,9 @@ def create_scholar(scholar_entry: dict[str, Any],
                 create = False, 
                 update = False, 
             )
+            
+    janusgraph_client = get_janusgraph_client()
+    mysql_client = get_mysql_client()
         
     scholar_id = janusgraph_client.create_vertex(
         v_label = LABEL_SCHOLAR,

@@ -1,4 +1,4 @@
-import zhitu 
+import core 
 
 from flask import Blueprint, request 
 import time 
@@ -14,7 +14,7 @@ def link_scholar_and_paper() -> dict[str, Any]:
     scholar_id = int(request.json['scholar_id']) 
     paper_id = int(request.json['paper_id']) 
     
-    zhitu.link_scholar_and_paper(
+    core.link_scholar_and_paper(
         scholar_id = scholar_id, 
         paper_id = paper_id, 
     )

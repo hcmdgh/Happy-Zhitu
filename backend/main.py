@@ -1,5 +1,8 @@
+import sys 
+sys.path.append('..')
+
 import blueprint
-import zhitu 
+import core
 
 from flask import Flask 
 
@@ -15,8 +18,7 @@ def create_app() -> Flask:
     app.register_blueprint(blueprint.zhitu.scholar.bp)
     app.register_blueprint(blueprint.zhitu.link.bp)
     
-    zhitu.mysql_client.init_app(app=app)
-    zhitu.mongo_client.init_app(app=app)
+    core.init_client(flask_app=app)
 
     return app 
 

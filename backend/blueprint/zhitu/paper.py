@@ -1,4 +1,4 @@
-import zhitu 
+import core 
 
 from flask import Blueprint, request 
 import time 
@@ -14,7 +14,7 @@ def query_paper_by_title() -> dict[str, Any]:
     paper_title = request.json['paper_title'].strip() 
     source = request.json['source'].strip() 
     
-    paper_list = zhitu.query_paper_by_title(
+    paper_list = core.query_paper_by_title(
         title = paper_title, 
         source = source, 
     )

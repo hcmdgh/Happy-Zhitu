@@ -1,4 +1,4 @@
-import zhitu 
+import core 
 
 from flask import Blueprint, request 
 import time 
@@ -13,7 +13,7 @@ def query_field_id_by_name() -> dict[str, Any]:
     
     field_name = request.json['field_name'].strip() 
     
-    field_id_set = zhitu.query_field_id_by_name(field_name)
+    field_id_set = core.query_field_id_by_name(field_name)
     
     return dict(
         error = None, 
@@ -29,7 +29,7 @@ def create_field() -> dict[str, Any]:
     field_name = request.json['field_name'].strip() 
     field_level = int(request.json['field_level']) 
     
-    result = zhitu.create_field(
+    result = core.create_field(
         field_name = field_name, 
         field_level = field_level,
     )

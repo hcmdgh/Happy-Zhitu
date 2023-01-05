@@ -1,4 +1,4 @@
-import zhitu 
+import core 
 
 from flask import Blueprint, request 
 import time 
@@ -11,7 +11,7 @@ bp = Blueprint('zhitu/diagnose', __name__, url_prefix='/zhitu/diagnose')
 def diagnose_all() -> dict[str, Any]:
     start_time = time.time()
     
-    result = zhitu.diagnose_all() 
+    result = core.diagnose_all() 
     
     result['time'] = time.time() - start_time 
     

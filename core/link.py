@@ -9,6 +9,8 @@ __all__ = [
 
 def link_scholar_and_paper(scholar_id: int,
                            paper_id: int):
+    janusgraph_client = get_janusgraph_client()
+    
     janusgraph_client.create_edge(
         src_vid = scholar_id, 
         dest_vid = paper_id, 
@@ -18,6 +20,8 @@ def link_scholar_and_paper(scholar_id: int,
 
 def link_paper_and_field(paper_id: int,
                          field_id: int):
+    janusgraph_client = get_janusgraph_client()
+    
     janusgraph_client.create_edge(
         src_vid = paper_id, 
         dest_vid = field_id, 

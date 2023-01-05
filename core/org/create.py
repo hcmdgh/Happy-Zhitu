@@ -11,6 +11,8 @@ __all__ = [
 
 def create_org(org_name: str, 
                check_exist: bool = True) -> dict[str, Any]:
+    janusgraph_client = get_janusgraph_client()
+    
     org_name = org_name.strip() 
                  
     if check_exist:
