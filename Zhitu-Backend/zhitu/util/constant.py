@@ -1,0 +1,27 @@
+LABEL_HAS_PAPER = 'hasPaper'
+LABEL_HAS_PROJECT = 'hasProject'
+LABEL_HAS_PATENT = 'hasPatent'
+LABEL_HAS_SCHOLAR = 'hasScholar'
+LABEL_HAS_ORG_PAPER = 'hasOrgPaper'
+LABEL_HAS_ORG_PATENT = 'hasOrgPatent'
+LABEL_HAS_ORG_PROJECT = 'hasOrgProject'
+LABEL_PAPER = 'Paper'
+LABEL_PROJECT = 'Project'
+LABEL_PATENT = 'Patent'
+LABEL_FIELD = 'Fos'
+LABEL_ORG = 'Organization'
+LABEL_SCHOLAR = 'Scholar'
+LABEL_HAS_PAPER_FIELD = "hasPaperFos"
+LABEL_HAS_PROJECT_FIELD = "hasProjectFos"
+LABEL_HAS_PATENT_FIELD = "hasPatentFos"
+
+PROP_FIELD_NAME = 'fos_name'
+PROP_FIELD_LEVEL = 'fos_level'
+PROP_NAME = 'name'
+PROP_ORG = 'org'
+PROP_DEPARTMENT = 'department'
+PROP_ORG_NAME = 'organization_name'
+PROP_TITLE_LOWERCASE = 'paper_title_lowercase'
+PROP_PAPER_TITLE = 'paper_title'
+PROP_PATENT_TITLE = 'patent_title'
+PROP_PROJECT_TITLE = 'project_title'
