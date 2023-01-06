@@ -15,7 +15,7 @@ def init():
     if not org_name_translation_map:
         print("Loading affiliation_name_translation.json...")
         
-        with open('/MAG/zhitu/affiliation_name_translation.json', 'r', encoding='utf-8') as fp:
+        with open('/MAG/json/affiliation_name_translation.json', 'r', encoding='utf-8') as fp:
             for line in fp: 
                 entry = json.loads(line)
                 norm_org_name = normalize_str(entry['affiliation_name'], keep_space=False)

@@ -1,9 +1,4 @@
-import sys 
-import os 
-os.chdir(os.path.dirname(__file__))
-sys.path.append('..')
-
-import blueprint
+from . import blueprint
 import core
 
 from flask import Flask 
@@ -36,6 +31,3 @@ def main():
         debug = False, 
     )
     
-
-if __name__ == '__main__':
-    main() 

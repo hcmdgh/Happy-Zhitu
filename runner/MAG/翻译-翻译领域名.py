@@ -12,17 +12,21 @@ def main():
             entry = json.loads(line)
             field_id = int(entry['id']) 
             field_name = entry['display_name'].strip() 
+            field_level = int(entry['level'])
+            
+            if field_level > 2:
+                continue 
 
             field_id_list.append(field_id)
             field_name_list.append(field_name)
 
     field_zh_name_list = jojo_translation.translate_batch_to_zh(
         source_batch = field_name_list, 
-        api = 'youdao', 
+        api = 'baidu', 
         use_tqdm = True, 
     )
             
-    with open('/MAG/zhitu/field_name_translation.json', 'w', encoding='utf-8') as fp:
+    with open('/MAG/zhitu/field_name_translation_L012.json', 'w', encoding='utf-8') as fp:
         assert len(field_id_list) == len(field_name_list) == len(field_zh_name_list)
         
         for field_id, field_name, field_zh_name in zip(field_id_list, field_name_list, field_zh_name_list):

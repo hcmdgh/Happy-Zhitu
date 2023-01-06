@@ -1,4 +1,4 @@
-import google_scholar
+from ... import google_scholar
 import core 
 
 from flask import Blueprint, request 

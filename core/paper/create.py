@@ -26,7 +26,7 @@ def create_paper(paper_entry: dict[str, Any]) -> dict[str, Any]:
             update = False,  
         )
         
-    paper_title_lowercase = normalize_str(paper_title)
+    paper_title_lowercase = normalize_str(paper_title, keep_space=True)
     paper_entry['paper_title_lowercase'] = paper_title_lowercase 
     
     exist_paper_ids = query_paper_id_by_title(paper_title)

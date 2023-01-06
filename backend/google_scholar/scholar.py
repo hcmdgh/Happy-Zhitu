@@ -39,13 +39,15 @@ def sync_scholar(google_scholar_id: str) -> dict[str, Any]:
     if result.get('scholar_id'): 
         zhitu_scholar_id = int(result['scholar_id'])
         
-        requests.get(
+        resp = requests.get(
             url = f"http://192.168.0.88:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
         )
+        assert resp.status_code == 200 
         
-        requests.get(
+        resp = requests.get(
             url = f"http://192.168.0.88:9004/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
         )
+        assert resp.status_code == 200 
 
     return dict(
         error = result.get('error'), 

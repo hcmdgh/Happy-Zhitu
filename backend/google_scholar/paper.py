@@ -2,6 +2,7 @@ from .client import *
 from .scholar import * 
 import core 
 
+import requests 
 from datetime import datetime
 from typing import Any, Optional 
 
@@ -87,7 +88,25 @@ def sync_paper(google_paper_id: str) -> dict[str, Any]:
 
     for google_scholar_id in google_scholar_id_list:
         if google_scholar_id:
-            sync_scholar(google_scholar_id=google_scholar_id) 
+            scholar_result = sync_scholar(google_scholar_id=google_scholar_id) 
+
+            zhitu_scholar_id = scholar_result.get('zhitu_scholar_id')
+            
+            if zhitu_scholar_id and zhitu_paper_id:
+                core.link_scholar_and_paper(
+                    scholar_id = zhitu_scholar_id, 
+                    paper_id = zhitu_paper_id, 
+                )
+                
+                resp = requests.get(
+                    url = f"http://192.168.0.88:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
+                )
+                assert resp.status_code == 200 
+                
+                resp = requests.get(
+                    url = f"http://192.168.0.88:9004/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
+                )
+                assert resp.status_code == 200 
             
     return dict(
         error = paper_result.get('error'), 

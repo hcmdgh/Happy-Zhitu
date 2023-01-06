@@ -31,7 +31,7 @@ def query_paper_id_by_title(title: str,
             janusgraph_client.query_vertex_by_prop(
                 label = LABEL_PAPER, 
                 prop_name = PROP_TITLE_LOWERCASE, 
-                prop_val = normalize_str(title), 
+                prop_val = normalize_str(title, keep_space=True), 
             )
         )
         
