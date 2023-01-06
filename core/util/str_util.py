@@ -6,7 +6,7 @@ __all__ = [
 
 
 def normalize_str(s: str,
-                  keep_space: bool = True) -> str: 
+                  keep_space: bool) -> str: 
     out = str()
     
     for ch in s: 

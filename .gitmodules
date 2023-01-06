@@ -10,3 +10,6 @@
 [submodule "JOJO-MongoDB"]
 	path = submodule/JOJO-MongoDB
 	url = git@github.com:hcmdgh/JOJO-MongoDB.git
+[submodule "submodule/JOJO-Translation"]
+	path = submodule/JOJO-Translation
+	url = git@github.com:hcmdgh/JOJO-Translation.git
