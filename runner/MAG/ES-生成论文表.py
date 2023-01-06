@@ -62,9 +62,9 @@ def main():
                 else:
                     conference_id = None 
                     
-                if journal_id:
+                if journal_id and journal_id in journal_map:
                     venue = journal_map[journal_id]
-                elif conference_id:
+                elif conference_id and conference_id in conference_map:
                     venue = conference_map[conference_id]
                 else:
                     venue = mag_paper_entry['originalVenue'] 
