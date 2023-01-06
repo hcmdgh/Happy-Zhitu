@@ -18,6 +18,7 @@ def main():
 
     field_zh_name_list = jojo_translation.translate_batch_to_zh(
         source_batch = field_name_list, 
+        api = 'youdao', 
         use_tqdm = True, 
     )
             
