@@ -162,6 +162,9 @@ def main():
                 field_id = int(field['field_id']) 
                 field_name = core.translate_field_name_to_zh(field['field_name'])
                 field_level = int(field['field_level']) + 1 
+                
+                if field_level > 2:
+                    continue
 
                 if field_id not in field_scholar_map: 
                     field_scholar_map[field_id] = dict()
