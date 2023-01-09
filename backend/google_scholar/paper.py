@@ -99,7 +99,7 @@ def sync_paper(google_paper_id: str) -> dict[str, Any]:
                 )
                 
                 resp = requests.get(
-                    url = f"http://192.168.0.88:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
+                    url = f"http://192.168.0.91:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
                 )
                 assert resp.status_code == 200 
                 

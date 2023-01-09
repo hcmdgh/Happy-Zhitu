@@ -2,3 +2,5 @@ test*
 __pycache__
 data
 *.log 
+input 
+output 

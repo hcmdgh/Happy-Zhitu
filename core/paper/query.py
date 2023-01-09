@@ -6,6 +6,7 @@ from typing import Any, Optional, Literal
 __all__ = [
     'query_paper_id_by_title', 
     'query_paper_by_title', 
+    'query_scholar_paper', 
 ]
 
 
@@ -74,5 +75,41 @@ def query_paper_by_title(title: str,
         
         return paper_list 
     
+    else:
+        raise AssertionError 
+
+
+def query_scholar_paper(scholar_id: int,
+                        source: str = 'ES') -> list[dict[str, Any]]:
+    janusgraph_client = get_janusgraph_client()
+    es_client = get_es_client()
+    
+    if source == 'ES':
+        index = es_client.get_index('paper_v10', 'paper_v10')
+
+        paper_list = index.query_X_eq_x(
+            X = 'scholars.scholarId', 
+            x = scholar_id, 
+        ) 
+        
+        return paper_list
+    
+    elif source == 'JanusGraph':
+        paper_id_set = janusgraph_client.query_vertex_neighbor(
+            vid = scholar_id, 
+            in_or_out = False, 
+            v_label = LABEL_PAPER, 
+        )
+        
+        paper_list = [
+            janusgraph_client.query_vertex_by_vid(
+                vid = paper_id, 
+                with_vid_and_label = True, 
+            )
+            for paper_id in paper_id_set 
+        ]
+        
+        return paper_list 
+        
     else:
         raise AssertionError 

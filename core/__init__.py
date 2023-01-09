@@ -1,5 +1,7 @@
 from .scholar import * 
 from .paper import * 
+from .patent import * 
+from .project import * 
 from .field import * 
 from .org import * 
 from .link import * 

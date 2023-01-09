@@ -28,13 +28,13 @@ def create_scholar(scholar_entry: dict[str, Any],
         )    
     
     if check_exist:
-        exist_scholar_list = query_scholar_by_name_org(
+        exist_scholar_ids = smart_query_scholar_id_by_name_org(
             scholar_name = scholar_name, 
             scholar_org = scholar_org, 
         )
         
-        if exist_scholar_list:
-            exist_scholar_id = exist_scholar_list[0]['id']
+        if exist_scholar_ids:
+            exist_scholar_id = exist_scholar_ids.pop()
             
             return dict(
                 error = None, 
