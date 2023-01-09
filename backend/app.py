@@ -16,6 +16,10 @@ def create_app() -> Flask:
     app.register_blueprint(blueprint.zhitu.link.bp)
     
     core.init_client(flask_app=app)
+    
+    app.config['SQLALCHEMY_POOL_SIZE'] = 100
+    app.config['SQLALCHEMY_POOL_TIMEOUT'] = 100
+    app.config['SQLALCHEMY_MAX_OVERFLOW'] = 100 
 
     return app 
 

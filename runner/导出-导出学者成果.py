@@ -30,17 +30,17 @@ def main():
         else:
             print(f"[ERROR] 学者id不存在：{scholar_id}") 
     
-    for scholar_id in tqdm(scholar_ids):
-        scholar_entry = scholar_entry_dict.get(scholar_id)
-        
-        if scholar_entry:
-            scholar_entry['paper_list'] = core.query_scholar_paper(scholar_id=scholar_id, source='ES')
-            scholar_entry['patent_list'] = core.query_scholar_patent(scholar_id=scholar_id, source='ES')
-            scholar_entry['project_list'] = core.query_scholar_project(scholar_id=scholar_id, source='ES')
+    with open('./output/scholar_publishes.json', 'w', encoding='utf-8') as fp: 
+        for scholar_id in tqdm(scholar_ids):
+            scholar_entry = scholar_entry_dict.get(scholar_id)
+            
+            if scholar_entry:
+                scholar_entry['paper_list'] = core.query_scholar_paper(scholar_id=scholar_id, source='ES')
+                scholar_entry['patent_list'] = core.query_scholar_patent(scholar_id=scholar_id, source='ES')
+                scholar_entry['project_list'] = core.query_scholar_project(scholar_id=scholar_id, source='ES')
 
-    with open('./output/scholar_publishes.txt', 'w', encoding='utf-8') as fp: 
-        json_str = core.json_dump(list(scholar_entry_dict.values()), indent=4) 
-        print(json_str, file=fp)  
+                json_str = core.json_dump(scholar_entry, indent=4) 
+                print(json_str, file=fp)  
 
 
 if __name__ == '__main__':
