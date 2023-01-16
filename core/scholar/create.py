@@ -1,6 +1,7 @@
 from .query import * 
 from ..util import * 
 from ..client import * 
+from ..org import * 
 
 from typing import Optional, Any 
 
@@ -14,7 +15,7 @@ def create_scholar(scholar_entry: dict[str, Any],
     try:
         assert 'id' not in scholar_entry 
         scholar_name = scholar_entry['name'] = scholar_entry['name'].strip() 
-        scholar_org = scholar_entry['org_name'] = scholar_entry['org_name'].strip() 
+        scholar_org = scholar_entry['org_name'] = translate_org_name_to_zh(scholar_entry['org_name'].strip())  
     except Exception:
         return dict(
             error = dict(
@@ -22,6 +23,8 @@ def create_scholar(scholar_entry: dict[str, Any],
                 detail = scholar_entry, 
             ), 
             scholar_id = None, 
+            scholar_name = None, 
+            scholar_org = None, 
             exist = None,
             create = False,
             update = False,  
@@ -36,9 +39,14 @@ def create_scholar(scholar_entry: dict[str, Any],
         if exist_scholar_ids:
             exist_scholar_id = exist_scholar_ids.pop()
             
+            exist_scholar_entry = query_scholar_by_id(exist_scholar_id)
+            assert exist_scholar_entry 
+            
             return dict(
                 error = None, 
                 scholar_id = exist_scholar_id, 
+                scholar_name = exist_scholar_entry['name'], 
+                scholar_org = exist_scholar_entry['org_name'], 
                 exist = True, 
                 create = False, 
                 update = False, 
@@ -64,6 +72,8 @@ def create_scholar(scholar_entry: dict[str, Any],
     return dict(
         error = None, 
         scholar_id = scholar_id, 
+        scholar_name = scholar_name, 
+        scholar_org = scholar_org, 
         exist = False, 
         create = True, 
         update = True, 

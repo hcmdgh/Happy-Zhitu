@@ -2,9 +2,26 @@ from .client import *
 from .scholar import * 
 import core 
 
+import json 
 import requests 
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Optional 
+
+executor = ThreadPoolExecutor(max_workers=50)
+
+
+def task(scholar_id: int):
+    resp = requests.get(
+        url = f"http://192.168.0.91:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={scholar_id}", 
+    )
+    assert resp.status_code == 200 
+    
+    resp = requests.get(
+        url = f"http://192.168.0.88:9004/academic-data-calculate/scholar-index/update-scholar?scholarId={scholar_id}", 
+    )
+    assert resp.status_code == 200 
+    
 
 __all__ = [
     'sync_paper', 
@@ -47,6 +64,18 @@ def sync_paper(google_paper_id: str) -> dict[str, Any]:
     
     paper_entry['abst'] = paper_entry.get('abstract') 
     paper_entry['paper_title'] = paper_entry.get('title') 
+    paper_entry['n_citation'] = paper_entry.get('num_citations') 
+    paper_entry['doc_type'] = paper_entry.get('pub_type')
+    paper_entry['keywords'] = paper_entry.get('keyword')
+    
+    author_name_list = [] 
+    
+    if paper_entry.get('author'):
+        for author_name in paper_entry['author']:
+            author_name_list.append(dict(name=author_name)) 
+    
+    if author_name_list:
+        paper_entry['authors'] = json.dumps(author_name_list, ensure_ascii=False).strip() 
     
     try:
         paper_entry['date'] = datetime.strptime(paper_entry.get('pub_date'), '%Y-%m-%d')  
@@ -64,7 +93,7 @@ def sync_paper(google_paper_id: str) -> dict[str, Any]:
     except Exception:
         paper_entry['year'] = None 
 
-    paper_result = core.create_paper(paper_entry)
+    paper_result = core.create_or_update_paper(paper_entry)
     
     zhitu_paper_id = paper_result.get('paper_id')
 
@@ -98,15 +127,7 @@ def sync_paper(google_paper_id: str) -> dict[str, Any]:
                     paper_id = zhitu_paper_id, 
                 )
                 
-                resp = requests.get(
-                    url = f"http://192.168.0.91:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
-                )
-                assert resp.status_code == 200 
-                
-                resp = requests.get(
-                    url = f"http://192.168.0.88:9004/academic-data-calculate/scholar-index/update-scholar?scholarId={zhitu_scholar_id}", 
-                )
-                assert resp.status_code == 200 
+                executor.submit(task, zhitu_scholar_id)
             
     return dict(
         error = paper_result.get('error'), 
