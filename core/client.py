@@ -3,73 +3,104 @@ import jojo_mysql
 import jojo_janusgraph 
 import jojo_mongo 
 import flask 
+import threading 
 from typing import Optional, Any 
 
 __all__ = [
-    'init_client', 
+    'init_flask_client', 
     'get_es_client', 
     'get_mysql_client', 
     'get_janusgraph_client', 
     'get_mongo_client', 
 ]
 
-es_client = None 
-mysql_client = None 
-janusgraph_client = None 
-mongo_client = None 
+flask_client_dict: dict[str, Any] = dict()
+thread_local_client_dict = threading.local() 
 
 
 def get_es_client() -> jojo_es.ESClient:
-    return es_client  
+    try:
+        return flask_client_dict['es_client']
+    except KeyError:
+        try:
+            return thread_local_client_dict.es_client 
+        except AttributeError:
+            thread_local_client_dict.es_client = jojo_es.ESClient(
+                host = '192.168.0.83', 
+                port = 9200, 
+            )
+            return thread_local_client_dict.es_client 
 
 
 def get_mysql_client() -> jojo_mysql.MySQLClient:
-    return mysql_client
+    try:
+        return flask_client_dict['mysql_client']
+    except KeyError:
+        try:
+            return thread_local_client_dict.mysql_client 
+        except AttributeError:
+            thread_local_client_dict.mysql_client = jojo_mysql.MySQLClient(
+                host = '192.168.0.84', 
+                port = 3306, 
+                user = 'root', 
+                password = 'root', 
+            )
+            return thread_local_client_dict.mysql_client 
 
 
 def get_janusgraph_client() -> jojo_janusgraph.JanusGraphClient:
-    return janusgraph_client 
+    try:
+        return flask_client_dict['janusgraph_client']
+    except KeyError:
+        try:
+            return thread_local_client_dict.janusgraph_client 
+        except AttributeError:
+            thread_local_client_dict.janusgraph_client = jojo_janusgraph.JanusGraphClient(
+                url = 'ws://192.168.0.83:8182/gremlin', 
+            )
+            return thread_local_client_dict.janusgraph_client 
 
 
 def get_mongo_client() -> jojo_mongo.MongoClient:
-    return mongo_client 
+    try:
+        return flask_client_dict['mongo_client']
+    except KeyError:
+        try:
+            return thread_local_client_dict.mongo_client 
+        except AttributeError:
+            thread_local_client_dict.mongo_client = jojo_mongo.MongoClient(
+                host = '192.168.0.86',
+                port = 27017, 
+            )
+            return thread_local_client_dict.mongo_client 
 
 
-def init_client(flask_app: Optional[flask.Flask] = None):
-    global es_client, mysql_client, janusgraph_client, mongo_client 
-    
-    if flask_app is None:
-        ESClient = jojo_es.ESClient
-        MySQLClient = jojo_mysql.MySQLClient 
-        JanusGraphClient = jojo_janusgraph.JanusGraphClient
-        MongoClient = jojo_mongo.MongoClient
-    else:
-        ESClient = jojo_es.ESClient
-        MySQLClient = jojo_mysql.FlaskSQLAlchemyClient 
-        JanusGraphClient = jojo_janusgraph.JanusGraphClient
-        MongoClient = jojo_mongo.FlaskPyMongoClient
-        
-    es_client = ESClient(
+def init_flask_client(flask_app: flask.Flask):
+    es_client = jojo_es.ESClient(
         host = '192.168.0.83', 
         port = 9200, 
     )
 
-    mysql_client = MySQLClient(
+    mysql_client = jojo_mysql.FlaskSQLAlchemyClient(
         host = '192.168.0.84', 
         port = 3306, 
         user = 'root', 
         password = 'root', 
     )
 
-    janusgraph_client = JanusGraphClient(
+    janusgraph_client = jojo_janusgraph.JanusGraphClient(
         url = 'ws://192.168.0.83:8182/gremlin', 
     )
 
-    mongo_client = MongoClient(
+    mongo_client = jojo_mongo.FlaskPyMongoClient(
         host = '192.168.0.86',
         port = 27017, 
     )
 
-    if flask_app is not None:
-        mysql_client.init_app(app=flask_app)
-        mongo_client.init_app(app=flask_app)
+    mysql_client.init_app(app=flask_app)
+    mongo_client.init_app(app=flask_app)
+
+    flask_client_dict['es_client'] = es_client 
+    flask_client_dict['janusgraph_client'] = janusgraph_client 
+    flask_client_dict['mongo_client'] = mongo_client 
+    flask_client_dict['mysql_client'] = mysql_client 

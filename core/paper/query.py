@@ -7,6 +7,7 @@ __all__ = [
     'query_paper_id_by_title', 
     'query_paper_by_title', 
     'query_scholar_paper', 
+    'query_scholar_paper_id', 
 ]
 
 
@@ -113,3 +114,15 @@ def query_scholar_paper(scholar_id: int,
         
     else:
         raise AssertionError 
+
+
+def query_scholar_paper_id(scholar_id: int) -> set[int]:
+    janusgraph_client = get_janusgraph_client()
+
+    paper_id_set = janusgraph_client.query_vertex_neighbor(
+        vid = scholar_id, 
+        in_or_out = False, 
+        v_label = LABEL_PAPER, 
+    )
+    
+    return paper_id_set 

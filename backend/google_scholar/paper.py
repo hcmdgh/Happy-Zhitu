@@ -6,22 +6,30 @@ import json
 import requests 
 from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
+import traceback
 from typing import Any, Optional 
 
 executor = ThreadPoolExecutor(max_workers=50)
 
 
 def task(scholar_id: int):
-    resp = requests.get(
-        url = f"http://192.168.0.91:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={scholar_id}", 
-    )
-    assert resp.status_code == 200 
-    
-    resp = requests.get(
-        url = f"http://192.168.0.88:9004/academic-data-calculate/scholar-index/update-scholar?scholarId={scholar_id}", 
-    )
-    assert resp.status_code == 200 
-    
+    try:
+        resp = requests.get(
+            url = f"http://192.168.0.91:9003/academic-data-calculate/scholar-index/update-scholar?scholarId={scholar_id}", 
+        )
+        if resp.status_code != 200: 
+            print(resp.text) 
+        
+        resp = requests.get(
+            url = f"http://192.168.0.88:9004/academic-data-calculate/scholar-index/update-scholar?scholarId={scholar_id}", 
+        )
+        if resp.status_code != 200: 
+            print(resp.text) 
+            
+        print(f"FZK scholar_id: {scholar_id}")
+    except Exception:
+        traceback.print_exc()
+
 
 __all__ = [
     'sync_paper', 
