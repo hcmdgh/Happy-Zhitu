@@ -6,6 +6,7 @@ __all__ = [
     'convert_str_to_pinyin', 
     'convert_name_to_pinyin_1', 
     'convert_name_to_pinyin_2', 
+    'convert_name_to_pinyins', 
 ]
 
 
@@ -53,3 +54,28 @@ def convert_name_to_pinyin_2(name: str) -> str:
     result = normalize_str(''.join(pinyin_list), keep_space=False)
     
     return result 
+
+
+def convert_name_to_pinyins(name: str) -> set[str]:
+    """
+    将中文姓名转换为几种常见拼音格式。
+    例如：
+      王德庆 -> {'王德庆', 'Wang Deqing', 'Deqing Wang', 'Wang De-qing'}
+      王德 -> {'王德', 'Wang De-', 'De Wang', 'Wang De'}
+
+    更新日期：2022/11/17
+    """
+    
+    pinyin_list = convert_str_to_pinyin(name)
+    
+    if len(pinyin_list) == 0:
+        return { name }
+    elif len(pinyin_list) == 1:
+        return { name, pinyin_list[0].capitalize() }
+    else:
+        return {
+            name,
+            pinyin_list[0].capitalize() + ' ' + ''.join(pinyin_list[1:]).capitalize(),
+            ''.join(pinyin_list[1:]).capitalize() + ' ' + pinyin_list[0].capitalize(),
+            pinyin_list[0].capitalize() + ' ' + pinyin_list[1].capitalize() + '-' + ''.join(pinyin_list[2:]),
+        }
