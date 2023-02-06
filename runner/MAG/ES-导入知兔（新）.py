@@ -6,6 +6,7 @@ sys.path.append('../..')
 import core 
 
 import json 
+import lzma 
 from tqdm.auto import tqdm 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import jojo_es 
@@ -21,10 +22,17 @@ def bulk_insert(es_client: jojo_es.ESClient,
     index = es_client.get_index(index_name, index_name)
     index.delete_index()
     
-    with open(path, 'r', encoding='utf-8') as fp:
+    if path.endswith('.json'):
+        fp = open(path, 'r', encoding='utf-8') 
+    elif path.endswith('.xz'):
+        fp = lzma.open(path, 'rt', encoding='utf-8') 
+    else:
+        raise AssertionError
+    
+    with fp:
         entry_batch = [] 
         
-        for line in tqdm(fp, desc=index_name, total=5590_0608):
+        for line in tqdm(fp, desc=index_name):
             entry = json.loads(line)
             entry_batch.append(entry)
             
@@ -49,9 +57,10 @@ def main():
     thread_list = [] 
     
     for index_name, path in [
-        ('mag_zhitu_scholar_history_index', '/MAG/zhitu/wzm/es/es_scholar_history_index_slim.json'), 
-        ('mag_zhitu_scholar_performance_index', '/MAG/zhitu/wzm/es/es_scholar_performance_index_slim.json'),
-        ('mag_zhitu_scholar_index', '/MAG/zhitu/wzm/es/es_scholar_index_slim.json'),
+        ('mag_zhitu_scholar_max_index', '/MAG/zhitu/wzm/es/es_scholar_max_index.json.xz'), 
+        ('mag_zhitu_scholar_index', '/MAG/zhitu/wzm/es/es_scholar_index.json.xz'),
+        ('mag_zhitu_scholar_history_index', '/MAG/zhitu/wzm/es/es_scholar_history_index.json.xz'),
+        ('mag_zhitu_scholar_performance_index', '/MAG/zhitu/wzm/es/es_scholar_performance_index.json.xz'),
     ]:
         thread = pool.submit(
             bulk_insert, 
