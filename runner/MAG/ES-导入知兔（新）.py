@@ -13,14 +13,15 @@ import jojo_es
 import traceback
 from typing import Any, Optional, Iterator  
 
-BATCH_SIZE = 1000 
+BATCH_SIZE = 10000
 
 
 def bulk_insert(es_client: jojo_es.ESClient, 
                 index_name: str,
-                path: str):
+                path: str,
+                num_rows: int):
     index = es_client.get_index(index_name, index_name)
-    index.delete_index()
+    # index.delete_index()
     
     if path.endswith('.json'):
         fp = open(path, 'r', encoding='utf-8') 
@@ -32,7 +33,7 @@ def bulk_insert(es_client: jojo_es.ESClient,
     with fp:
         entry_batch = [] 
         
-        for line in tqdm(fp, desc=index_name):
+        for line in tqdm(fp, desc=index_name, total=num_rows):
             entry = json.loads(line)
             entry_batch.append(entry)
             
@@ -56,17 +57,19 @@ def main():
     pool = ThreadPoolExecutor(max_workers=10)
     thread_list = [] 
     
-    for index_name, path in [
-        ('mag_zhitu_scholar_max_index', '/MAG/zhitu/wzm/es/es_scholar_max_index.json.xz'), 
-        ('mag_zhitu_scholar_index', '/MAG/zhitu/wzm/es/es_scholar_index.json.xz'),
-        ('mag_zhitu_scholar_history_index', '/MAG/zhitu/wzm/es/es_scholar_history_index.json.xz'),
-        ('mag_zhitu_scholar_performance_index', '/MAG/zhitu/wzm/es/es_scholar_performance_index.json.xz'),
+    for index_name, path, num_rows in [
+        ('mag_zhitu_paper', '/MAG/zhitu/wzm/es/es_paper.json', 3171_8738), 
+        # ('mag_zhitu_scholar_max_index', '/MAG/zhitu/wzm/es/es_scholar_max_index.json.xz'), 
+        # ('mag_zhitu_scholar_index', '/MAG/zhitu/wzm/es/es_scholar_index.json.xz'),
+        # ('mag_zhitu_scholar_history_index', '/MAG/zhitu/wzm/es/es_scholar_history_index.json.xz'),
+        # ('mag_zhitu_scholar_performance_index', '/MAG/zhitu/wzm/es/es_scholar_performance_index.json.xz'),
     ]:
         thread = pool.submit(
             bulk_insert, 
             es_client = es_client, 
             index_name = index_name, 
             path = path,
+            num_rows = num_rows, 
         )
         
         thread_list.append(thread)
