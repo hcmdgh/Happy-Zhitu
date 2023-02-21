@@ -6,6 +6,8 @@ __all__ = [
     'link_scholar_and_patent', 
     'link_scholar_and_project', 
     'link_paper_and_field', 
+    'link_patent_and_field', 
+    'link_project_and_field', 
 ]
 
 
@@ -50,4 +52,26 @@ def link_paper_and_field(paper_id: int,
         src_vid = paper_id, 
         dest_vid = field_id, 
         edge_label = LABEL_HAS_PAPER_FIELD, 
+    )
+
+
+def link_patent_and_field(patent_id: int,
+                          field_id: int):
+    janusgraph_client = get_janusgraph_client()
+    
+    janusgraph_client.create_edge(
+        src_vid = patent_id, 
+        dest_vid = field_id, 
+        edge_label = LABEL_HAS_PATENT_FIELD, 
+    )
+
+
+def link_project_and_field(project_id: int,
+                           field_id: int):
+    janusgraph_client = get_janusgraph_client()
+    
+    janusgraph_client.create_edge(
+        src_vid = project_id, 
+        dest_vid = field_id, 
+        edge_label = LABEL_HAS_PROJECT_FIELD, 
     )

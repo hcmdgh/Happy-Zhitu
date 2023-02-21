@@ -28,6 +28,8 @@ def convert_to_gdb_project_entry(raw_project_entry: dict[str, Any]) -> dict[str,
     del gdb_project_entry['finished']
     del gdb_project_entry['zhitu_id']
     
+    gdb_project_entry['project_title'] = gdb_project_entry.get('title')
+    
     return gdb_project_entry
 
 
