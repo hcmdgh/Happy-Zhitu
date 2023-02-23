@@ -5,6 +5,7 @@ os.chdir(_dir)
 sys.path.append(os.path.join(_dir, '../..'))
 sys.path.append(os.path.join(_dir, '../../submodule/package'))
 
+import lzma 
 from tqdm import tqdm 
 
 import core 
@@ -27,17 +28,38 @@ def main():
     author_index = es_client.get_index('mag_author')
     paper_index = es_client.get_index('mag_paper')
     paper_author_index = es_client.get_index('mag_paper_author_affiliation')
+    
+    exist_cnt = total_cnt = 0 
             
-    for scholar_id in tqdm(scholar_id_set, disable=True):
-        scholar_entry = core.query_scholar_by_id(scholar_id)
+    with lzma.open('../output/MAG_scholar_paper.json.xz', 'wt', encoding='utf-8') as fp:
+        for scholar_id in tqdm(scholar_id_set, disable=True):
+            scholar_entry = core.query_scholar_by_id(scholar_id)
 
-        if not scholar_entry:
-            print(f"学者id不存在：{scholar_id}")
-        else:
-            scholar_name = scholar_entry['name']
-            scholar_org = scholar_entry['org_name']
-            
-            paper_author_list = paper_author_index.query_X_eq_x
+            if not scholar_entry:
+                print(f"学者id不存在：{scholar_id}")
+            else:
+                scholar_name = scholar_entry['name']
+                scholar_org = scholar_entry['org_name']
+                
+                paper_author_list = paper_author_index.query_X_eq_x_and_Y_eq_y(
+                    X = 'original_author', 
+                    x = scholar_name, 
+                    Y = 'original_affiliation', 
+                    y = scholar_org, 
+                )
+                
+                if paper_author_list:
+                    exist_cnt += 1 
+                total_cnt += 1 
+                
+                paper_list = [] 
+                
+                for paper_author_entry in paper_author_list:
+                    paper_id = int(paper_author_entry['paper_id'])
+                    paper_entry = paper_index.query_by_id(paper_id)    
+                    paper_list.append(paper_entry) 
+                
+            print(f"{exist_cnt} / {total_cnt}")
 
 
 if __name__ == '__main__':
