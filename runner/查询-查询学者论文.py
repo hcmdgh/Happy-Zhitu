@@ -8,8 +8,8 @@ from pprint import pprint
 
 import core 
 
-SCHOLAR_ID = 28681261240  # 庄福振
 SCHOLAR_ID = 14372606192  # 王德庆
+SCHOLAR_ID = 28681261240  # 庄福振
 
 
 def main():
@@ -19,17 +19,16 @@ def main():
     )
     print(len(paper_list))
 
-    title_list = [] 
-    
+    paper_list.sort(key=lambda x: x['paper_title'])
+
     for paper in paper_list:
         title = paper['paper_title']
-        title_list.append(title)
-
-    title_list.sort() 
-    
-    for title in title_list:
+        citation_cnt = paper['n_citation']
+        
         print(title)
-    
+        print(citation_cnt)
+        print()
+
 
 if __name__ == '__main__':
     main() 
