@@ -31,7 +31,7 @@ def create_scholar(scholar_entry: dict[str, Any],
         )    
     
     if check_exist:
-        exist_scholar_ids = smart_query_scholar_id_by_name_org(
+        exist_scholar_ids = query_scholar_id_by_name_org(
             scholar_name = scholar_name, 
             scholar_org = scholar_org, 
         )

@@ -6,6 +6,7 @@ from typing import Optional, Any
 
 __all__ = [
     'query_scholar_by_name_org', 
+    'query_scholar_id_by_name_org', 
     'smart_query_scholar_id_by_name_org', 
     'query_scholar_by_id', 
 ]
@@ -25,6 +26,18 @@ def query_scholar_by_name_org(scholar_name: str,
     )
     
     return entry_list
+
+
+def query_scholar_id_by_name_org(scholar_name: str,
+                                 scholar_org: str) -> set[int]:
+    scholar_entry_list = query_scholar_by_name_org(
+        scholar_name = scholar_name, 
+        scholar_org = scholar_org, 
+    )
+    
+    scholar_id_set = { int(entry['id']) for entry in scholar_entry_list }
+    
+    return scholar_id_set
 
 
 def smart_query_scholar_id_by_name_org(scholar_name: str,

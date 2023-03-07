@@ -7,6 +7,7 @@ from typing import Optional, Any
 __all__ = [
     'add_scholar_title', 
     'update_scholar_title', 
+    'update_scholar_by_id', 
 ]
 
 
@@ -56,4 +57,16 @@ def update_scholar_title(scholar_id: int,
 
     return dict(
         error = None, 
+    )
+
+
+def update_scholar_by_id(scholar_id: int,
+                         **kvs):
+    mysql_client = get_mysql_client()
+    
+    table = mysql_client.get_table('dump', 'scholar_basic')
+    
+    table.update_by_id(
+        id = scholar_id, 
+        **kvs, 
     )
