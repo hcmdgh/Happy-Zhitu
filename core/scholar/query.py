@@ -5,6 +5,7 @@ from ..org import *
 from typing import Optional, Any 
 
 __all__ = [
+    'query_scholar_by_org', 
     'query_scholar_by_name_org', 
     'query_scholar_id_by_name_org', 
     'smart_query_scholar_id_by_name_org', 
@@ -23,6 +24,19 @@ def query_scholar_by_name_org(scholar_name: str,
         x = scholar_name.strip(),
         Y = 'org_name', 
         y = scholar_org.strip(),          
+    )
+    
+    return entry_list
+
+
+def query_scholar_by_org(scholar_org: str) -> list[dict[str, Any]]:
+    mysql_client = get_mysql_client()
+    
+    table = mysql_client.get_table('dump', 'scholar_basic')
+    
+    entry_list = table.query_X_eq_x(
+        X = 'org_name', 
+        x = scholar_org.strip(),          
     )
     
     return entry_list
