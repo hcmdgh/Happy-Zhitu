@@ -10,6 +10,7 @@ import core
 
 SCHOLAR_ID = 14372606192  # 王德庆
 SCHOLAR_ID = 28681261240  # 庄福振
+SCHOLAR_ID = 44466257968 
 
 
 def main():
