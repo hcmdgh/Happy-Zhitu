@@ -41,26 +41,42 @@ def main():
 
     matched_cnt = 0 
     
-    with open('../input/scholar_info.json', 'r', encoding='utf-8') as fp:
-        for line in tqdm(fp.readlines()):
-            scholar_entry = json.loads(line)
-            scholar_name = scholar_entry['name']
-            scholar_name_2 = scholar_name[1:] + scholar_name[:1]
-            scholar_org = scholar_entry['org_name']
-            norm_name = normalize_str(scholar_name)
-            norm_name_2 = normalize_str(scholar_name_2)
-            
-            author_entry_list = new_author_index.query_X_in_x_and_Y_eq_y(
-                X = 'normalized_name', 
-                x = [norm_name, norm_name_2], 
-                Y = 'country', 
-                y = SCHOLAR_COUNTRY, 
-                limit = 5, 
-            )
-            
-            if author_entry_list:
-                matched_cnt += 1 
+    with open('../input/scholar_info.json', 'r', encoding='utf-8') as reader:
+        with open('../output/scholar_with_google_id.json', 'w', encoding='utf-8') as writer:
+            for line in tqdm(reader.readlines()):
+                scholar_entry = json.loads(line)
+                zhitu_id = scholar_entry['id']
+                scholar_name = scholar_entry['name']
+                scholar_name_2 = scholar_name[1:] + scholar_name[:1]
+                scholar_org = scholar_entry['org_name']
+                norm_name = normalize_str(scholar_name)
+                norm_name_2 = normalize_str(scholar_name_2)
                 
+                author_entry_list = new_author_index.query_X_in_x_and_Y_eq_y(
+                    X = 'normalized_name', 
+                    x = [norm_name, norm_name_2], 
+                    Y = 'country', 
+                    y = SCHOLAR_COUNTRY, 
+                    limit = 5, 
+                )
+                
+                google_id_set = { author_entry['id'] for author_entry in author_entry_list }
+                
+                if google_id_set:
+                    matched_cnt += 1
+                    
+                json_str = json.dumps(
+                    dict(
+                        zhitu_id = zhitu_id, 
+                        scholar_name = scholar_name, 
+                        scholar_org = scholar_org,
+                        google_id_list = list(google_id_set), 
+                    ),
+                    ensure_ascii = False, 
+                ).strip() 
+                
+                print(json_str, file=writer)
+                    
     print(f"匹配的学者数量：{matched_cnt}")
 
             
