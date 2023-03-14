@@ -1,9 +1,3 @@
-import os 
-import sys 
-_dir = os.path.dirname(__file__)
-os.chdir(_dir)
-sys.path.append(os.path.join(_dir, '..'))
-
 import json 
 import pymongo 
 from tqdm import tqdm 
