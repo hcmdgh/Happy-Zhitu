@@ -8,7 +8,7 @@ import core
 
 from pprint import pprint 
 
-TITLE = '木霉菌和毛壳菌的基因工程及生物防治分子机理的研究'
+TITLE = 'A theoretical investigation on ESIPT process of a red-emitting ratiometric fluorescent probe and its fluorescent detection mechanism for cyanide anion'
 
 
 def main():
@@ -20,7 +20,7 @@ def main():
     pprint(paper_list)
     print() 
 
-    patent_list = core.query_paper_by_title(
+    patent_list = core.query_patent_by_title(
         title = TITLE, 
         source = 'JanusGraph', 
     )

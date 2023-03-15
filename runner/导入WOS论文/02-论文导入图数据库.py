@@ -1,16 +1,23 @@
 import json 
 import lzma 
 from tqdm import tqdm 
+import traceback
 from datetime import datetime 
 from typing import Optional, Any 
 
 import jojo_janusgraph 
 
 INPUT_PATH = '/mnt/GengHao/zhitu-data/WOS-20212022/raw.json.xz'
-OUTPUT_PATH = '/mnt/GengHao/zhitu-data/WOS-20212022/graph_database.json.xz'
+OUTPUT_PATH = '/mnt/GengHao/zhitu-data/WOS-20212022/raw-with-zhitu-id.json.xz'
 COUNT = 198_5198
 
 graph_client = jojo_janusgraph.JanusGraphClient(url='ws://192.168.0.83:8182/gremlin')
+
+
+def reset_graph_client():
+    global graph_client 
+    
+    graph_client = jojo_janusgraph.JanusGraphClient(url='ws://192.168.0.83:8182/gremlin')
 
 
 def normalize_title(title: str) -> str:
@@ -122,35 +129,40 @@ def main():
     with lzma.open(INPUT_PATH, 'rt', encoding='utf-8') as reader, \
          lzma.open(OUTPUT_PATH, 'wt', encoding='utf-8') as writer:
         for line in tqdm(reader, total=COUNT):
-            wos_paper_entry = json.loads(line) 
-            
-            zhitu_paper_entry = convert_wos_paper_entry_to_zhitu(wos_paper_entry)
-            
-            paper_title = zhitu_paper_entry.get('paper_title')
-            
-            if not paper_title:
-                print(f"论文标题不存在：{wos_paper_entry}")
-                continue 
-            
-            exist_paper_id_set = query_paper_by_title(paper_title)
-            
-            if exist_paper_id_set:
-                paper_id = exist_paper_id_set.pop() 
+            try:
+                wos_paper_entry = json.loads(line) 
                 
-                graph_client.update_vertex(
-                    vid = paper_id, 
-                    prop_dict = zhitu_paper_entry, 
-                )
-            else:
-                paper_id = graph_client.create_vertex(
-                    v_label = 'Paper',
-                    prop_dict = zhitu_paper_entry,
-                )
-            
-            zhitu_paper_entry['zhitu_id'] = paper_id 
-            
-            json_str = json.dumps(zhitu_paper_entry, ensure_ascii=False).strip() 
-            print(json_str, file=writer)
+                zhitu_paper_entry = convert_wos_paper_entry_to_zhitu(wos_paper_entry)
+                
+                paper_title = zhitu_paper_entry.get('paper_title')
+                
+                if not paper_title:
+                    print(f"论文标题不存在：{wos_paper_entry}")
+                    continue 
+                
+                exist_paper_id_set = query_paper_by_title(paper_title)
+                
+                if exist_paper_id_set:
+                    paper_id = exist_paper_id_set.pop() 
+                    
+                    graph_client.update_vertex(
+                        vid = paper_id, 
+                        prop_dict = zhitu_paper_entry, 
+                    )
+                else:
+                    paper_id = graph_client.create_vertex(
+                        v_label = 'Paper',
+                        prop_dict = zhitu_paper_entry,
+                    )
+                
+                wos_paper_entry['zhitu_id'] = paper_id 
+                
+                json_str = json.dumps(wos_paper_entry, ensure_ascii=False).strip() 
+                print(json_str, file=writer)
+            except Exception:
+                traceback.print_exc()  
+                
+                reset_graph_client()               
             
 
 if __name__ == '__main__':
